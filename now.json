@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "name": "placeholdmon",
+  "public": false,
+  "alias": "placeholdmon.thattomperson.now.sh",
+  "builds": [
+    { "src": "src/index.js", "use": "@now/node", "config": { "maxLambdaSize": "20mb" }}
+  ],
+  "routes": [
+    { "src": ".*", "dest": "src/index.js" }
+  ]
+}
