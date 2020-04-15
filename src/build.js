@@ -42,23 +42,23 @@ async function generate() {
   const bar = new ProgressBar('Generating :current / :total', { total: folders.length });
   for (let i = 0; i < folders.length; i++) {
     const name = folders[i];
-    const pkmn = {}
 
     const variants = fs.readdirSync(path.join(base, name));
 
     for (let j = 0; j < variants.length; j++) {
-      const variant = variants[j];
+      const variant = variants[j].replace('.png', '')
     
-      const image = await jimp.read(path.join(base, name, variant))
+      const image = await jimp.read(path.join(base, name, variants[j]))
       const f = await image.autocrop().getBufferAsync("image/png")
       const pallet = await Vibrant.from(f).getPalette()
-      pkmn[variant.replace('.png', '')] = {
+
+      manifest[variant] = manifest[variant] || {}
+      manifest[variant][name] = {
         file: f.toString("base64"),
         pallet: jimp.rgbaToInt(...pallet.Vibrant.rgb, 255)
       }
     }
-
-    manifest[name] = pkmn
+    
     bar.tick()
   };
 

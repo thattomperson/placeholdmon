@@ -3,10 +3,10 @@ const manifest = require('./manifest.json')
 const jimp = require('jimp');
 const { parse } = require('url')
 
-const names = Object.keys(manifest)
-
 function random(shiny = false) {
-  return manifest[names[Math.floor(Math.random()*names.length)]][shiny ? 'shiny' : 'normal'];
+  const pkmn = manifest[shiny ? 'shiny' : 'normal'];
+  const names = Object.keys(pkmn)
+  return pkmn[names[Math.floor(Math.random()*names.length)]];
 }
 
 // var item = items[Math.floor(Math.random()*items.length)];
