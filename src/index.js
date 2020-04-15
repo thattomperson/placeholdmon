@@ -30,7 +30,7 @@ module.exports = async (req, res) => {
   const aw = fx - 2*padding
 
 
-  let file = await jimp.read(new Buffer(pkmn.file, "base64"))
+  let file = await jimp.read(Buffer.from(pkmn.file, "base64"))
   const image = new jimp(fx, fy, pkmn.pallet)
 
   let h = file.getHeight();
