@@ -3,17 +3,21 @@ const manifest = require('./manifest.json')
 const jimp = require('jimp');
 const { parse } = require('url')
 
-function random(shiny = false) {
+function getPkmn(shiny = false, name) {
   const pkmn = manifest[shiny ? 'shiny' : 'normal'];
   const names = Object.keys(pkmn)
-  return pkmn[names[Math.floor(Math.random()*names.length)]];
+  if (!name || !pkmn[name]) {
+    return pkmn[names[Math.floor(Math.random()*names.length)]];
+  }
+  
+  return pkmn[name]
 }
 
 // var item = items[Math.floor(Math.random()*items.length)];
 
 module.exports = async (req, res) => {
   const { query, pathname } = parse(req.url, true)
-  const pkmn = random('shiny' in query)
+  const pkmn = getPkmn('shiny' in query, query.name)
   
   
   const [fx, fy] = (pathname.slice(1) || '500x500').split('x');
