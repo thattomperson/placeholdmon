@@ -4,42 +4,42 @@ const Vibrant = require('node-vibrant')
 const fs = require('fs')
 const path = require('path')
 const jimp = require('jimp')
-const request = require('request-promise-native')
+const fetch = require('node-fetch')
 const mkdir = require('mkdirp')
+const eachLimit =  require('async/eachLimit')
+const ProgressBar = require('progress');
 
-const base = path.resolve('./src/assets');
-const manifest = {}
 
-function download(basePath, name, url) {
+const base = path.resolve('./src/assets')
+async function download(basePath, name, url) {
   if (!url) {
     return Promise.resolve()
   }
-  return new Promise((resolve) => {
-    mkdir.sync(basePath)
-    request.get(url)
-    .pipe(fs.createWriteStream(path.join(basePath, `${name}.png`)))
-    .on("finish", resolve)
-  })
+  
+  await mkdir(basePath)
+  return fetch(url)
+    .then(res => res.body.pipe(fs.createWriteStream(path.join(basePath, `${name}.png`))))
 }
 
 
 async function generate() {
-  
   const manifest = {};
   if (process.env.REBUILD) {
-    for (let i = 1; i <= 807; i ++) {
-      console.log(`getting ${i}`)
-      const res = await request.get(`https://pokeapi.co/api/v2/pokemon/${i}`)
-      const d = JSON.parse(res)
+    const pokemon = await (await fetch(`https://pokeapi.co/api/v2/pokemon/?limit=10000`)).json()
+    const bar = new ProgressBar('Downloading :current / :total', { total: pokemon.count });
 
+    await eachLimit(pokemon.results, 20, async ({url}) => {
+      const res = await (await fetch(url)).json()
       await Promise.all([
-        download(path.join(base, d.name), 'normal', d.sprites.front_default),
-        download(path.join(base, d.name), 'shiny', d.sprites.front_shiny)
+        download(path.join(base, res.name), 'normal', res.sprites.front_default),
+        download(path.join(base, res.name), 'shiny', res.sprites.front_shiny)
       ])
-    }
+      bar.tick()
+    })
   }
 
   const folders = fs.readdirSync(base);
+  const bar = new ProgressBar('Generating :current / :total', { total: folders.length });
   for (let i = 0; i < folders.length; i++) {
     const name = folders[i];
     const pkmn = {}
@@ -59,6 +59,7 @@ async function generate() {
     }
 
     manifest[name] = pkmn
+    bar.tick()
   };
 
   fs.writeFileSync("src/manifest.json", JSON.stringify(manifest))

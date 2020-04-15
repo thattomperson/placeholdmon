@@ -1,12 +1,15 @@
 {
   "scripts": {
-    "build": "node src/build.js"
+    "build": "node src/build.js",
+    "rebuild": "REBUILD=1 npm run build"
   },
   "devDependencies": {
+    "async": "^3.2.0",
     "mkdirp": "^1.0.0",
+    "node-fetch": "^2.6.0",
     "node-vibrant": "^3.2.0-alpha",
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.7"
+    "progress": "^2.0.3",
+    "request": "^2.88.0"
   },
   "dependencies": {
     "jimp": "^0.10.0"
