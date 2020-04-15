@@ -16,7 +16,7 @@ module.exports = async (req, res) => {
   const pkmn = random('shiny' in query)
   
   
-  const [fx, fy] = pathname.slice(1).split('x');
+  const [fx, fy] = (pathname.slice(1) || '500x500').split('x');
 
   const padding = 10;
   if (fy < 2*padding || fx < 2*padding) {
