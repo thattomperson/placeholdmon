@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "public": false,
+  "alias": "placeholdmon.now.sh",
+  "builds": [
+    { "src": "src/index.js", "use": "@now/node", "config": { "maxLambdaSize": "20mb" }},
+    { "src": "src/index.html", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/.*", "dest": "src/index.js" }
+  ]
+}
