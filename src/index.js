@@ -1,4 +1,4 @@
-const fs = require('fs/promises');
+const fs = require('fs');
 const manifest = require('./manifest.json');
 const jimp = require('jimp');
 const { parse } = require('url');
@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
   if (req.headers.accept.includes('text/html')) {
     return res
       .status(200)
-      .send((await fs.readFile('./src/index.html')).toString('utf-8'));
+      .send(fs.readFileSync('./src/index.html').toString('utf-8'));
   }
 
   const { query, pathname } = parse(req.url, true);
