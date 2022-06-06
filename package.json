@@ -1,9 +1,11 @@
 {
   "scripts": {
+    "build-html": "HTML_ONLY=1 npm run build",
     "build": "node src/build.js",
     "rebuild": "REBUILD=1 npm run build"
   },
   "devDependencies": {
+    "@vercel/node": "^2.0.1",
     "async": "^3.2.0",
     "mkdirp": "^1.0.0",
     "node-fetch": "^2.6.1",

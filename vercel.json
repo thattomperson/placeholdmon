@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "public": false,
+  "alias": "placeholdmon.ttp.sh",
+  "builds": [
+    {
+      "src": "src/index.ts",
+      "use": "@vercel/node",
+      "config": {
+        "maxLambdaSize": "20mb"
+      }
+    },
+    {
+      "src": "src/favicon.ico",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "favicon.ico",
+      "dest": "src/favicon.ico"
+    },
+    {
+      "src": ".*",
+      "dest": "src/index.ts"
+    }
+  ]
+}
